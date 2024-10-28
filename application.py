@@ -9,7 +9,8 @@ load_dotenv()
 app = Flask(__name__)
 app.config['WS_SECRET_KEY'] = os.getenv('WS_SECRET_KEY')
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+# Initialize SocketIO with eventlet
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 @app.route('/', methods=['GET'])
 def home():
@@ -22,5 +23,5 @@ def handle_message(msg):
     send(reply)
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))  # Retrieve port from environment variables, default to 5000
+    port = int(os.getenv('PORT', 5001))  # Retrieve port from environment variables, default to 5000
     socketio.run(app, debug=True, host='0.0.0.0', port=port)
